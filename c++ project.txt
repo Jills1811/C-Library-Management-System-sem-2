@@ -1,0 +1,887 @@
+#include<iostream>
+#include <conio.h>
+#include<stdio.h>
+#include<string>
+#include<cstring>
+#include<iomanip>
+
+using namespace std;
+
+class base
+{
+    public:
+        virtual void report() = 0;
+        virtual void display_data() = 0;
+};
+
+class book : public base
+{
+    private:
+        int book_no;
+        string book_name;
+        string author_name;
+    public:
+        book()
+        {
+        }
+        void create_book(int temp_no,string temp_name,string temp_aname)
+        {
+            book_no = temp_no;
+            book_name = temp_name;
+            author_name = temp_aname;
+            cout << "\n\nBook Created";
+        }
+
+        void modify_book(int n,string name,string aname)
+        {
+            book_no = n;
+            book_name = name;
+            author_name = aname;
+        }
+
+        void display_data()
+        {
+            cout << "\nBook no. : ";
+            cout << book_no;
+            cout << "\nBook Name : ";
+            cout << book_name;
+            cout << "\nAuthor Name : ";
+            cout << author_name;
+        }
+
+        virtual void report()
+        {
+            cout << book_no << setw(29) << right << book_name << setw(25) << right << author_name << endl;
+        }
+
+        int id()
+        {
+            int x;
+            x = book_no;
+            return x;
+        }
+};                  // Class Book Ends
+
+class student : public base
+{
+    private:
+        string student_id;
+        string name;
+        int student_book_no;
+        int token;
+    public:
+        student()
+        {
+        }
+        void create_student(string x,string n)
+        {
+            student_id = x;
+            name = n;
+            cout<<"\n\nStudent Record Created..";
+        }
+        void display_data()
+        {
+            cout << "\nStudent ID : ";
+            cout << student_id;
+            cout << "\nStudent name : ";
+            cout << name;
+            cout << "\nNumber of Book issued : " << token;
+            if(token == 1)
+            {
+                cout << "\nBook number : " << student_book_no;
+            }
+        }
+
+        void modify_student(string st_id,string n)
+        {
+            student_id = st_id;
+            name = n;
+        }
+
+        void getbook(int temp)
+        {
+            student_book_no = temp;
+        }
+
+        int student_book()
+        {
+            int x;
+            x = student_book_no;
+            return x;
+        }
+
+        void resettoken()
+        {
+            token = 0;
+        }
+
+        void addtoken()
+        {
+            token = 1;
+        }
+
+        int rettoken()
+        {
+            int t;
+            t = token;
+            return t;
+        }
+
+        string id()
+        {
+            string a;
+            a = student_id;
+            return a;
+        }
+
+        virtual void report()
+        {
+            cout << setw(10) <<student_id << setw(26) << name << setw(20) << token << endl;
+        }
+};                  //class student ends
+
+book bk[100];
+student st[100];
+
+int total_students;
+
+int check_id(string x,int total_students)
+{
+    int t=0;
+    for(int i=0;i<total_students;i++)
+    {
+        if(x == st[i].id())
+        {
+            t = 1;
+        }
+    }
+    return t;
+}
+
+int new1=0;
+
+void new_student_info()
+{
+    string id,name;
+    char ch='y';
+    while(ch == 'y' || ch == 'Y')
+    {
+        cout << "\nNEW STUDENT ENTRY...\n";
+        cout << "\nEnter the student id : ";
+        cin >> id;
+        while(1)
+        {
+            if(check_id(id,new1))
+            {
+                cout << "Student ID already exist please enter valid id : ";
+                cin >> id;
+            }
+            else
+            {
+                break;
+            }
+        }
+        getchar();
+        cout << "\nEnter the name of the student : ";
+        getline(cin,name);
+        st[new1].create_student(id,name);
+        new1++;
+        cout << "\n\nDo you want to add more record..(y,n)? ";
+        cin>>ch;
+        while(ch != 'y' && ch != 'Y' && ch != 'n' && ch != 'N')
+        {
+            cout << "\nInvalid input please enter valid input...(y/n) : ";
+            cin >> ch;
+        }
+    }
+    total_students = new1;
+}
+
+int total_books;
+
+int check_no(int temp_no,int total_books)
+{
+    int t=0;
+    for(int i=0;i<total_books;i++)
+    {
+        if(temp_no == bk[i].id())
+        {
+            t = 1;
+        }
+    }
+    return t;
+}
+int ind = 0;
+void write_book()
+{
+    string temp_name,temp_aname;
+    int temp_no;
+    char ch='y';
+    while(ch == 'y' || ch == 'Y')
+    {
+        cout << "\nNew Book Entry...\n";
+        cout << "\nEnter the book number : ";
+        cin >> temp_no;
+        while(1)
+        {
+            if(check_no(temp_no,ind))
+            {
+                cout << "Book number already exist please enter valid number : ";
+                cin >> temp_no;
+            }
+            else
+            {
+                break;
+            }
+        }
+        getchar();
+        cout << "\nEnter the name of the Book : ";
+        getline(cin,temp_name);
+        cout << "\nEnter the Author's Name : ";
+        getline(cin,temp_aname);
+        bk[ind].create_book(temp_no,temp_name,temp_aname);
+        ind++;
+        cout << "\n\nDo you want to add more books..(y/n)? ";
+        cin >> ch;
+        while(ch != 'y' && ch != 'Y' && ch != 'n' && ch != 'N')
+        {
+            cout << "\nInvalid input please enter valid input...(y/n) : ";
+            cin >> ch;
+        }
+    }
+    total_books = ind;
+}
+
+void display_all_records()
+{
+    if(total_students == 0)
+    {
+        cout << "\nThere is no student information present kindly enter student details first...";
+    }
+    else
+    {
+        int con=0;
+        cout << "\n\n\t\t\tSTUDENT LIST\n";
+        //cout << "\t\t\t~~\n\n";
+        cout << "------------------------------------------------------------\n";
+        cout << "Student ID";
+        cout << "\t\t" << "Student Name";
+        cout << "\t\t" << "Book Issued\n";
+        cout << "------------------------------------------------------------\n";
+        while(con < total_students)
+        {
+            st[con].report();
+            con++;
+        }
+    }
+}
+
+void display_all_books()
+{
+    if(total_books == 0)
+    {
+        cout << "\nThere are no books present kindly create a book data first...";
+    }
+    else
+    {
+        cout << "\n\t\t\tBOOK LIST\n";
+        //cout << "\t\t\t~\n\n";
+        cout << "-------------------------------------------------------\n";
+	    cout << "Book Number" << setw(20);
+	    cout << "Book Name" << setw(25);
+	    cout << "Author\n";
+	    cout << "-------------------------------------------------------\n";
+	    int a=0;
+	    while(a < total_books)
+	    {
+	        bk[a].report();
+	        a++;
+	    }
+    }
+}
+
+void display_specific_student(string x)
+{
+    if(total_students == 0)
+    {
+        cout << "\nInvalid id!!!\nNo student found...";
+    }
+    else
+    {
+        cout << "\n-------------------------------------";
+        cout << "\n           STUDENT DETAILS\n";
+        cout << "-------------------------------------";
+        int flag = 0,a=0;
+        while(a < total_students && flag == 0)
+        {
+            if(st[a].id() == x)
+            {
+                st[a].display_data();
+                flag = 1;
+            }
+            a++;
+        }
+        if(flag == 0)
+        {
+            cout << "\n\nStudent doesn't exist";
+        }
+    }
+}
+
+void display_specific_book(int book)
+{
+    if(total_books == 0)
+    {
+        cout << "\nInvalid number!!!\nNo book found...";
+    }
+    else
+    {
+        cout << "\n-------------------------------------";
+        cout << "\n           BOOK DETAILS\n";
+        cout << "-------------------------------------";
+        int flag = 0;
+        int a = 0;
+        while(a < total_books)
+        {
+            if(bk[a].id() == book)
+            {
+                bk[a].display_data();
+                flag = 1;
+            }
+            a++;
+        }
+        if(flag == 0)
+        {
+            cout << "\n\nBook does not exist";
+        }
+    }
+}
+
+void modify_student()
+{
+    if(total_students == 0)
+    {
+        cout << "\nNo student data found kindly enter student data first in order to modify student information...";
+    }
+    else
+    {
+        string a,name,student_id;
+        //char ch='y';
+        int x = 0,flag=0;
+        cout << "\n\n\tMODIFY STUDENT RECORD... ";
+        cout << "\n\nEnter the student ID which is to be updated : ";
+        cin >> a;
+        while(x < total_students)
+        {
+            if(st[x].id() == a)
+            {
+                flag=1;
+                cout << "\nEnter New Student details : ";
+                cout << "\nStudent ID : ";
+                cin >> student_id;
+                while(1)
+                {
+                    if(a == student_id)
+                    {
+                        break;
+                    }
+                    else if(check_id(student_id,new1))
+                    {
+                        cout << "Student ID already exist please enter valid id : ";
+                        cin >> student_id;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                getchar();
+                cout << "\nModify Student Name : ";
+                getline(cin,name);
+                st[x].modify_student(student_id,name);
+            }
+            x++;
+        }
+        if(flag == 1)
+        {
+            cout << "\n\n\tRECORD UPDATED SUCCESSFULLY";
+        }
+        else
+        {
+            cout << "\n\nRecord not found";
+        }
+    }
+}
+
+void modify_book()
+{
+    if(total_books == 0)
+    {
+        cout << "\nNo books found kindly enter book data first in order to modify it...";
+    }
+    else
+    {
+        int no,a=0,found=0,num;
+        string book_name,author_name;
+        cout << "\n\n\tMODIFY BOOK RECORD...";
+        cout << "\n\nEnter the number of book : ";
+        cin >> no;
+        while(a < total_books)
+        {
+            if(bk[a].id() == no)
+            {
+                found = 1;
+                bk[a].display_data();
+                cout << "\nEnter the new details of book" << endl;
+                cout << "\nBook number : ";
+                cin >> num;
+                while(1)
+                {
+                    if(no == num)
+                    {
+                        break;
+                    }
+                    else if(check_no(num,total_books))
+                    {
+                        cout << "Book number already exist please enter valid number : ";
+                        cin >> num;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                cout << "\nModify Book Name : ";
+                getchar();
+                getline(cin,book_name);
+                cout << "\nModify author's name of book : ";
+                getline(cin,author_name);
+                bk[a].modify_book(num,book_name,author_name);
+            }
+            a++;
+        }
+        if(found == 0)
+        {
+            cout << "\n\nRecord not found";
+        }
+        else
+        {
+            cout << "\n\n\tRECORD UPDATED SUCCESSFULLY";
+        }
+    }
+}
+
+void delete_student()
+{
+    if(total_students == 0)
+    {
+        cout << "\nNo student data is created...";
+    }
+    else
+    {
+        string id;
+        int a = 0,i;
+        cout << "\n\n\tDELETE STUDENT...";
+        cout << "\n\nEnter the id of the student that you want to delete : ";
+        cin >> id;
+        while(1)
+        {
+            if(!(check_id(id,total_students)))
+            {
+                cout << "Record not found please enter valid id : ";
+                cin >> id;
+            }
+            else
+            {
+                break;
+            }
+        }
+        while(a < total_students)
+        {
+            if(st[a].id() == id)
+            {
+                for(i=a;i<total_students;i++)
+                {
+                    st[i] = st[i+1];
+                }
+            }
+            a++;
+        }
+        total_students--;
+        new1--;
+        cout << "\n\nRECORD DELETED...";
+    }
+}
+
+void delete_book()
+{
+    if(total_books == 0)
+    {
+        cout << "\nNo book data is created...";
+    }
+    else
+    {
+        int no;
+        int a = 0,i;
+        cout << "\n\n\tDELETE BOOK...";
+        cout << "\n\nEnter the number of the book that you want to delete : ";
+        cin >> no;
+        while(1)
+        {
+            if(!(check_no(no,total_books)))
+            {
+                cout << "Book record not found please enter valid number : ";
+                cin >> no;
+            }
+            else
+            {
+                break;
+            }
+        }
+        while(a < total_books)
+        {
+            if(bk[a].id() == no)
+            {
+                for(i=a;i<total_books;i++)
+                {
+                    bk[i] = bk[i+1];
+                }
+            }
+            a++;
+        }
+        total_books--;
+        ind--;
+        cout << "\n\nRECORD DELETED...";
+    }
+}
+
+void book_issue()
+{
+    if(total_students == 0)
+    {
+        cout << "\nPlease create student record first...\n";
+    }
+
+    else
+    {
+        string id;
+        int no,a=0,b=0;
+        cout << "\n------------------------------------";
+        cout << "\n             BOOK ISSUE";
+        cout << "\n------------------------------------";
+	    cout << "\n\nEnter The student ID : ";
+	    cin >> id;
+	    while(1)
+        {
+            if(!(check_id(id,total_students)))
+            {
+                cout << "Record not found please enter valid id : ";
+                cin >> id;
+            }
+            else
+            {
+                break;
+            }
+        }
+	    while(a < total_students)
+	    {
+	        if(st[a].id() == id)
+	        {
+	            if(st[a].rettoken() == 0)
+	            {
+	                if(total_books == 0)
+                    {
+                        cout << "\nPlease create book record first...\n";
+                    }
+                    else
+                    {
+	                    cout << "\n\nEnter the book number : ";
+	                    cin >> no;
+	                    while(1)
+                        {
+                            if(!(check_no(no,total_books)))
+                            {
+                                cout << "Book record not found please enter valid number : ";
+                                cin >> no;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+	                    while(b < total_books)
+	                    {
+	                        if(bk[b].id() == no)
+	                        {
+	                            bk[b].display_data();
+	                            st[a].addtoken();
+	                            st[a].getbook(no);
+	                            cout << "\n\n\tBOOK ISSUED SUCCESSFULLY...";
+	                            cout << "\n\nPlease note :-\n";
+	                            cout << "Write current date in the backside of book and";
+	                            cout << " you need to submit this book within 15 days.\n";
+	                            cout << "Fine of Rs.100 for each day will be";
+	                            cout << " taken after 15 days period";
+	                            break;
+	                        }
+	                        b++;
+	                    }
+	                }
+	            }
+	            else
+	            {
+	                cout<<"\nYou have not returned the last book.";
+	                cout<<"\nBook can be issued only after returning the";
+	                cout<<" previous one.";
+	            }
+	       }
+	       a++;
+	   }
+    }
+}
+
+void book_deposit()
+{
+    if(total_students == 0)
+    {
+        cout << "\nPlease create student record first...\n";
+    }
+    else
+    {
+        string temp_string;
+        int no,a=0,b=0,day,fine;
+        cout << "\n------------------------------------";
+        cout << "\n            BOOK DEPOSIT";
+        cout << "\n------------------------------------";
+        cout << "\n\nEnter the student ID : ";
+        cin >> temp_string;
+        while(1)
+        {
+            if(!(check_id(temp_string,new1)))
+            {
+                cout << "Record not found please enter valid id : ";
+                cin >> temp_string;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(total_books == 0)
+        {
+            cout << "\nPlease create book record first...\n";
+        }
+        else
+        {
+            while(a < total_students)
+            {
+                if(st[a].id() == temp_string)
+                {
+                    if(st[a].rettoken() == 1)
+                    {
+                        cout << "\n\nEnter the book number which you want to deposit : ";
+                        cin >> no;
+                        while(1)
+                        {
+                            if(!(check_no(no,ind)))
+                            {
+                                cout << "Book record not found please enter valid number : ";
+                                cin >> no;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        while(b < total_books)
+                        {
+                            if(no == st[a].student_book())
+                            {
+                                bk[b].display_data();
+                                cout<<"\n\nBook deposited in no. of days : ";
+                                cin >> day;
+                                if(day > 15)
+                                {
+                                    fine = (day - 15) * 100;
+                                    cout << "\n\nFine has to be deposited rs ";
+                                    cout << fine;
+                                }
+                                st[a].resettoken();
+                                cout << "\n\n\tBook deposited successfully";
+                                break;
+                            }
+                            b++;
+                        }
+                    }
+                    else
+                    {
+                        cout << "\nNo book is issued please check!!!";
+                    }
+                }
+                a++;
+            }
+        }
+    }
+}
+
+void admin_menu()
+{
+    int i,no;
+    char ch = 'y';
+    string id;
+    cout << "\n\n\nADMINISTRATOR MENU";
+	cout << "\n1. CREATE STUDENT RECORD";
+	cout << "\n2. DISPLAY ALL STUDENTS RECORD";
+	cout << "\n3. DISPLAY SPECIFIC STUDENT RECORD ";
+	cout << "\n4. MODIFY STUDENT RECORD";
+	cout << "\n5. DELETE STUDENT RECORD";
+	cout << "\n6. CREATE BOOK ";
+	cout << "\n7. DISPLAY ALL BOOKS ";
+	cout << "\n8. DISPLAY SPECIFIC BOOK ";
+	cout << "\n9. MODIFY BOOK ";
+	cout << "\n10. DELETE BOOK ";
+	cout << "\n11. BACK TO MAIN MENU";
+	cout << "\nPlease Enter Your Choice (1-11): ";
+	cin >> i;
+	while(1)
+	{
+	    if(i < 1 || i>11)
+	    {
+	        cout << "\nIncorrect choice please enter correct choice : ";
+	        cin >> i;
+	    }
+	    else
+	    {
+	        break;
+	    }
+	}
+	switch(i)
+	{
+	    case 1:
+	        new_student_info();
+	        break;
+	    case 2:
+	        display_all_records();
+	        break;
+	    case 3:
+	        cout << "\n\nEnter Student ID : ";
+	        cin >> id;
+	        display_specific_student(id);
+	        break;
+	    case 4:
+	        while(ch == 'y' || ch == 'Y')
+	        {
+	            modify_student();
+	            cout << "\n\nDo you want to modify more record(y/n)? ";
+	            cin >> ch;
+	            while(ch != 'y' && ch != 'Y' && ch != 'n' && ch != 'N')
+                {
+                    cout << "\nInvalid input please enter valid input...(y/n) : ";
+                    cin >> ch;
+                }
+	        }
+	        break;
+	    case 5:
+	        ch = 'y';
+	        while(ch == 'y' || ch == 'Y')
+	        {
+	            delete_student();
+	            cout << "\n\nDo you want to delete more record(y/n)? ";
+	            cin >> ch;
+	            while(ch != 'y' && ch != 'Y' && ch != 'n' && ch != 'N')
+                {
+                    cout << "\nInvalid input please enter valid input...(y/n) : ";
+                    cin >> ch;
+                }
+	        }
+	        break;
+	    case 6:
+	        write_book();
+	        break;
+	    case 7:
+	        display_all_books();
+	        break;
+	    case 8:
+	        cout << "\n\nPlease Enter book number : ";
+	        cin >> no;
+	        display_specific_book(no);
+	        break;
+	    case 9:
+	        ch = 'y';
+	        while(ch == 'y' || ch == 'Y')
+	        {
+	            modify_book();
+	            cout << "\n\nDo you want to modify more books(y/n)? ";
+	            cin >> ch;
+	            while(ch != 'y' && ch != 'Y' && ch != 'n' && ch != 'N')
+                {
+                    cout << "\nInvalid input please enter valid input...(y/n) : ";
+                    cin >> ch;
+                }
+	        }
+	        break;
+	    case 10:
+	        ch = 'y';
+	        while(ch == 'y' || ch == 'Y')
+	        {
+	            delete_book();
+	            cout << "\n\nDo you want to delete more books(y/n)? ";
+	            cin >> ch;
+	            while(ch != 'y' && ch != 'Y' && ch != 'n' && ch != 'N')
+                {
+                    cout << "\nInvalid input please enter valid input...(y/n) : ";
+                    cin >> ch;
+                }
+	        }
+	        break;
+	    case 11:
+	        return;
+	}
+	admin_menu();
+}
+
+int main()
+{
+    int index = 1;
+    cout << "LIBRARY MANAGEMENT SYSTEM";
+    cout << "\n\nMade by : Ambaliya Jills & Kevin Araniya";
+    while(index != 4)
+    {
+        cout << "\n----------------------------------------";
+        cout << "\n              MAIN MENU";
+        cout << "\n----------------------------------------";
+		cout << "\n\n01. ADMINISTRATOR MENU";
+		cout << "\n02. BOOK ISSUE";
+		cout << "\n03. BOOK DEPOSIT";
+		cout << "\n04. EXIT";
+		cout << "\nPlease Select Your Option (1-4): ";
+		cin >> index;
+		while(1)
+		{
+		    if(index < 1 || index > 4)
+		    {
+		        cout << "\nIncorrect choice please enter correct choice : ";
+		        cin >> index;
+		    }
+		    else
+		    {
+		        break;
+		    }
+		}
+		switch(index)
+		{
+		    case 1 :
+		        admin_menu();
+		        break;
+		    case 2 :
+		        book_issue();
+		        break;
+		    case 3 :
+		        book_deposit();
+		        break;
+		    case 4 :
+		        cout << "\n\nTHANK YOU!!!";
+		        return 0;
+        }
+    }
+}
